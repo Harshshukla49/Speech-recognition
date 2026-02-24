@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+models/*.h5
+models/*.hdf5
+models/*.keras
+models/*.pb
+checkpoints/*
+!checkpoints/.gitkeep
+
+# Logs
+logs/
+*.log
+*.out
+
+# Temporary files
+temp_*
+*.tmp
+*.wav.tmp
+
+# Model artifacts
+*.pkl
+*.pickle
+*.npy
+*.npz
+
+# TensorBoard
+runs/
+tensorboard/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.local
