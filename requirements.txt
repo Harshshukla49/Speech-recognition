@@ -1,29 +1,21 @@
-# Core
 numpy==1.24.4
 pandas==2.0.3
-scipy==1.11.1
-
-# Visualization
 matplotlib==3.7.2
-plotly==5.15.0
 seaborn==0.12.2
+scipy==1.10.1
 
-# Audio
 librosa==0.10.1
 soundfile==0.12.1
+
+tensorflow==2.15.0
+scikit-learn==1.3.0
+
+streamlit==1.25.0
+streamlit-webrtc==0.47.1
 SpeechRecognition
 pydub==0.25.1
 
-# ML
-scikit-learn==1.3.0
-
-# Deep Learning (safe version)
-tensorflow==2.13.0
-
-# Web
-streamlit==1.25.0
-streamlit-webrtc==0.47.1
-
-# Utils
 tqdm==4.65.0
 joblib==1.3.1
+
+plotly==5.15.0
