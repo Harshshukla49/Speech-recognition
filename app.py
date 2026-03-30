@@ -11,7 +11,14 @@ from io import BytesIO
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
+try:
+    from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
+    WEBRTC_AVAILABLE = True
+except Exception:
+    webrtc_streamer = None
+    WebRtcMode = None
+    RTCConfiguration = None
+    WEBRTC_AVAILABLE = False
 
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
@@ -509,28 +516,33 @@ def main():
     with tab2:
         st.header("Record Your Voice")
 
-        st.markdown("🎤 Click 'START' to begin recording. Speak clearly, then click 'STOP' to end recording.")
+        if not WEBRTC_AVAILABLE:
+            st.warning("🎤 Live recording is unavailable in this deployment environment.")
+            st.info("Use the 'Upload Audio' tab to analyze a local audio file.")
+            webrtc_ctx = None
+        else:
+            st.markdown("🎤 Click 'START' to begin recording. Speak clearly, then click 'STOP' to end recording.")
 
-        # WebRTC Configuration
-        RTC_CONFIGURATION = RTCConfiguration({
-            "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-        })
+            # WebRTC Configuration
+            RTC_CONFIGURATION = RTCConfiguration({
+                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+            })
 
-        # WebRTC Streamer for audio recording
-        webrtc_ctx = webrtc_streamer(
-            key="audio-recorder",
-            mode=WebRtcMode.SENDONLY,
-            audio_receiver_size=1024,
-            rtc_configuration=RTC_CONFIGURATION,
-            media_stream_constraints={"audio": True, "video": False},
-        )
+            # WebRTC Streamer for audio recording
+            webrtc_ctx = webrtc_streamer(
+                key="audio-recorder",
+                mode=WebRtcMode.SENDONLY,
+                audio_receiver_size=1024,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"audio": True, "video": False},
+            )
 
-        # Record button
-        if st.button("🎙️ Record Audio", key="start_record"):
-            st.info("🎤 Recording started! Click 'STOP' when finished.")
+            # Record button
+            if st.button("🎙️ Record Audio", key="start_record"):
+                st.info("🎤 Recording started! Click 'STOP' when finished.")
 
         # Check if audio data is available
-        if webrtc_ctx.audio_receiver:
+        if webrtc_ctx and webrtc_ctx.audio_receiver:
             audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=1)
 
             if len(audio_frames) > 0:

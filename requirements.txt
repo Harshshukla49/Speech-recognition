@@ -13,9 +13,6 @@ keras==2.15.0
 protobuf==3.20.3
 
 streamlit==1.32.2
-streamlit-webrtc==0.50.0
-aiortc==1.6.0
-av==11.0.0
 
 SpeechRecognition==3.10.4
 pydub==0.25.1
