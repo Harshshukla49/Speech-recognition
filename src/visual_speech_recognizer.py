@@ -252,18 +252,37 @@ class VisualSpeechRecognizerAdapter:
         If pre-trained weights are present, runs neural inference.
         Otherwise, returns honest diagnostic status indicating the pipeline is ready.
         """
+        rois = self.preprocess_mouth_rois(frames_list, lip_points, selected_speaker_idx)
+        
+        # Calculate visual kinematics metrics if lip_points available
+        mean_vel = 0.0
+        act_pct = 0.0
+        if lip_points and len(lip_points) > 0:
+            mean_vel = float(np.mean([p.lip_velocity for p in lip_points]))
+            speaking_frames = sum(1 for p in lip_points if p.is_speaking)
+            act_pct = round((speaking_frames / len(lip_points)) * 100.0, 1)
+
         if self.model_loaded:
             decoded = self.decode_visual_speech(frames_list, lip_points or [], selected_speaker_idx)
             return {
                 'model_loaded': True,
+                'status': 'Mounted (Active Neural Model)',
                 'transcript': decoded['transcript'],
                 'segments': decoded['segments'],
+                'extracted_tensor_shape': f"({len(rois)}, 88, 88)",
+                'mean_lip_kinematic_velocity': mean_vel,
+                'visual_articulatory_activity_pct': act_pct,
                 'diagnostic_message': 'Pretrained VSR Conformer inference completed.'
             }
         else:
             return {
                 'model_loaded': False,
+                'status': 'Standby (Kinematic Viseme Pipeline Ready)',
                 'transcript': None,
+                'segments': [],
+                'extracted_tensor_shape': f"({len(rois)}, 88, 88)",
+                'mean_lip_kinematic_velocity': mean_vel,
+                'visual_articulatory_activity_pct': act_pct,
                 'diagnostic_message': 'Pretrained AV-Hubert / Conformer VSR weights not mounted. Kinematic viseme pipeline is ready.'
             }
 

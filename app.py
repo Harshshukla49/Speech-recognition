@@ -1683,17 +1683,24 @@ def main():
                         with st.expander("🔬 View Visual Speech Recognition Architecture & Readiness", expanded=True):
                             col_vsr1, col_vsr2 = st.columns([1.2, 1.0])
                             with col_vsr1:
+                                vsr_loaded = vsr_results.get('model_loaded', False)
+                                vsr_status = vsr_results.get('status', 'Standby (Kinematic Viseme Pipeline Ready)')
+                                vsr_diag = vsr_results.get('diagnostic_message', 'Visual speech recognition pipeline active.')
+                                vsr_shape = vsr_results.get('extracted_tensor_shape', f"({len(frames_list)}, 88, 88)")
+                                vsr_vel = vsr_results.get('mean_lip_kinematic_velocity', 0.0)
+                                vsr_act = vsr_results.get('visual_articulatory_activity_pct', 0.0)
+
                                 st.markdown(f"""
                                     <div style="font-size: 0.88rem; color: #CBD5E1; margin-bottom: 8px;">
-                                        <b>Adapter Status:</b> <span style="color: {'#10B981' if vsr_results['model_loaded'] else '#38BDF8'}; font-weight: 700;">{vsr_results['status']}</span>
+                                        <b>Adapter Status:</b> <span style="color: {'#10B981' if vsr_loaded else '#38BDF8'}; font-weight: 700;">{vsr_status}</span>
                                     </div>
                                     <p style="font-size: 0.84rem; color: #94A3B8;">
-                                        {vsr_results['diagnostic_message']}
+                                        {vsr_diag}
                                     </p>
                                     <div style="font-size: 0.82rem; color: #CBD5E1; background: #0F172A; border: 1px solid var(--border-subtle); padding: 10px; border-radius: 6px;">
-                                        <b>Extracted Mouth ROI Tensor:</b> <code>{vsr_results['extracted_tensor_shape']}</code> (Grayscale [T, 88, 88])<br>
-                                        <b>Articulatory Kinematic Velocity:</b> {vsr_results.get('mean_lip_kinematic_velocity', 0.0):.4f}<br>
-                                        <b>Speech Activity Percentage:</b> {vsr_results.get('visual_articulatory_activity_pct', 0.0)}%
+                                        <b>Extracted Mouth ROI Tensor:</b> <code>{vsr_shape}</code> (Grayscale [T, 88, 88])<br>
+                                        <b>Articulatory Kinematic Velocity:</b> {vsr_vel:.4f}<br>
+                                        <b>Speech Activity Percentage:</b> {vsr_act}%
                                     </div>
                                 """, unsafe_allow_html=True)
                             with col_vsr2:
