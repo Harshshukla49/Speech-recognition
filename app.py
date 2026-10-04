@@ -12,6 +12,7 @@ import io
 import time
 import json
 import uuid
+import base64
 from datetime import datetime
 
 # Configure UTF-8 encoding for standard streams on Windows
@@ -538,6 +539,364 @@ st.markdown("""
         color: var(--text-primary) !important;
     }
 
+    /* =========================================================================
+       VOICEMIND AI LANDING PAGE DESIGN SYSTEM (#030B1B, #091A33, #00D4FF, #2677FF, #8B5CF6)
+       ========================================================================= */
+    .vm-landing-wrapper {
+        background: radial-gradient(circle at 85% 15%, rgba(38, 119, 255, 0.16) 0%, transparent 45%),
+                    radial-gradient(circle at 15% 45%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                    radial-gradient(circle at 50% 85%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                    linear-gradient(180deg, #030B1B 0%, #07162D 100%);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 24px;
+        padding: 28px 34px 40px 34px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    
+    /* Navigation Bar */
+    .vm-navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 24px;
+        background: rgba(9, 26, 51, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 212, 255, 0.22);
+        border-radius: 40px;
+        margin-bottom: 36px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .vm-logo-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none !important;
+    }
+    .vm-wave-icon {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        height: 24px;
+    }
+    .vm-wave-bar {
+        width: 3.5px;
+        background: linear-gradient(180deg, #00D4FF 0%, #8B5CF6 100%);
+        border-radius: 3px;
+        animation: vmPulse 1.4s ease-in-out infinite alternate;
+    }
+    .vm-wave-bar:nth-child(1) { height: 12px; animation-delay: 0.1s; }
+    .vm-wave-bar:nth-child(2) { height: 22px; animation-delay: 0.3s; }
+    .vm-wave-bar:nth-child(3) { height: 16px; animation-delay: 0.2s; }
+    .vm-wave-bar:nth-child(4) { height: 26px; animation-delay: 0.4s; }
+    .vm-wave-bar:nth-child(5) { height: 14px; animation-delay: 0.15s; }
+    @keyframes vmPulse {
+        0% { transform: scaleY(0.5); opacity: 0.7; }
+        100% { transform: scaleY(1.1); opacity: 1; }
+    }
+    .vm-brand-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+    .vm-brand-name span {
+        color: #00D4FF;
+    }
+    .vm-brand-tagline {
+        font-size: 0.7rem;
+        color: #94A3B8;
+        letter-spacing: 0.05em;
+        display: block;
+    }
+    .vm-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+    }
+    .vm-nav-link {
+        color: #CBD5E1 !important;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        position: relative;
+        padding: 4px 0;
+    }
+    .vm-nav-link:hover, .vm-nav-link.active {
+        color: #00D4FF !important;
+    }
+    .vm-nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #00D4FF;
+        border-radius: 2px;
+        box-shadow: 0 0 8px #00D4FF;
+    }
+    .vm-btn-cta-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid rgba(0, 212, 255, 0.4);
+        border-radius: 24px;
+        color: #00D4FF !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none !important;
+        transition: all 0.25s ease;
+        box-shadow: 0 0 14px rgba(0, 212, 255, 0.15);
+    }
+    .vm-btn-cta-nav:hover {
+        background: #00D4FF;
+        color: #030B1B !important;
+        box-shadow: 0 0 22px rgba(0, 212, 255, 0.45);
+        transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .vm-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 30px;
+        padding: 6px 16px;
+        color: #00D4FF;
+        font-size: 0.84rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        margin-bottom: 18px;
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.12);
+    }
+    .vm-hero-title {
+        font-size: 3.4rem !important;
+        font-weight: 900 !important;
+        color: #FFFFFF !important;
+        line-height: 1.12 !important;
+        margin: 0 0 18px 0 !important;
+        letter-spacing: -0.03em !important;
+    }
+    .vm-gradient-text {
+        background: linear-gradient(135deg, #00D4FF 0%, #2677FF 45%, #8B5CF6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+    .vm-hero-desc {
+        font-size: 1.05rem;
+        color: #B8CCE6;
+        line-height: 1.65;
+        margin-bottom: 26px;
+        max-width: 580px;
+    }
+
+    /* Feature Indicators Pods */
+    .vm-indicators-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 32px;
+    }
+    .vm-indicator-pod {
+        background: rgba(9, 26, 51, 0.7);
+        border: 1px solid rgba(0, 212, 255, 0.18);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.25s ease;
+    }
+    .vm-indicator-pod:hover {
+        border-color: #00D4FF;
+        background: rgba(9, 26, 51, 0.95);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 212, 255, 0.14);
+    }
+    .vm-pod-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(0, 212, 255, 0.12);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+    .vm-pod-title {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        line-height: 1.2;
+    }
+    .vm-pod-sub {
+        font-size: 0.72rem;
+        color: #94A3B8;
+        line-height: 1.2;
+        margin-top: 2px;
+    }
+
+    /* Hero Right Visual Presentation */
+    .vm-visual-wrapper {
+        position: relative;
+        background: #091A33;
+        border: 1px solid rgba(0, 212, 255, 0.28);
+        border-radius: 20px;
+        padding: 14px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(0, 212, 255, 0.12);
+        overflow: hidden;
+    }
+    .vm-visual-img {
+        width: 100%;
+        height: auto;
+        border-radius: 14px;
+        display: block;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .vm-floating-card {
+        position: absolute;
+        background: rgba(9, 26, 51, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+        z-index: 2;
+    }
+    .vm-floating-hinglish {
+        top: 24px;
+        right: 24px;
+        width: 200px;
+    }
+    .vm-floating-emotions {
+        bottom: 24px;
+        right: 24px;
+        width: 220px;
+    }
+
+    /* Capability Section & Cards */
+    .vm-section-tag {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #00D4FF;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .vm-section-title {
+        font-size: 2.2rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        margin: 0 0 26px 0 !important;
+        letter-spacing: -0.02em !important;
+    }
+    .vm-capability-card {
+        background: linear-gradient(180deg, #091A33 0%, #061326 100%);
+        border: 1px solid rgba(38, 119, 255, 0.28);
+        border-radius: 16px;
+        padding: 22px 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        position: relative;
+        overflow: hidden;
+    }
+    .vm-capability-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #00D4FF, #8B5CF6);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .vm-capability-card:hover {
+        border-color: #00D4FF;
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(0, 212, 255, 0.16);
+    }
+    .vm-capability-card:hover::before {
+        opacity: 1;
+    }
+    .vm-card-icon-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(0, 212, 255, 0.12);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        margin-bottom: 14px;
+    }
+    .vm-card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin: 0 0 8px 0;
+    }
+    .vm-card-desc {
+        font-size: 0.84rem;
+        color: #B8CCE6;
+        line-height: 1.55;
+        margin-bottom: 14px;
+    }
+    .vm-card-bullets {
+        font-size: 0.8rem;
+        color: #94A3B8;
+        padding-left: 18px;
+        margin-bottom: 18px;
+    }
+    .vm-card-bullets li {
+        margin-bottom: 4px;
+    }
+
+    /* Live Interactive Demo Box */
+    .vm-demo-console {
+        background: #091A33;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 18px;
+        padding: 24px;
+        margin: 30px 0;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Technical Grid */
+    .vm-tech-tile {
+        background: rgba(9, 26, 51, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 16px;
+        transition: all 0.2s ease;
+    }
+    .vm-tech-tile:hover {
+        border-color: #38BDF8;
+        background: rgba(9, 26, 51, 0.85);
+    }
+
     .dashboard-footer {
         border-top: 1px solid var(--border-subtle);
         padding: 24px 0 12px 0;
@@ -548,6 +907,24 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
+
+# -----------------------------------------------------------------------------
+# Base64 Image Helper for Embedded Visuals
+# -----------------------------------------------------------------------------
+def get_image_base64(image_path: str) -> str:
+    """Reads image from disk and returns standard data URI string"""
+    if os.path.exists(image_path):
+        try:
+            with open(image_path, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("utf-8")
+                ext = os.path.splitext(image_path)[1].lstrip('.').lower()
+                if ext == 'jpg':
+                    ext = 'jpeg'
+                return f"data:image/{ext};base64,{encoded}"
+        except Exception:
+            return ""
+    return ""
 
 
 # -----------------------------------------------------------------------------
@@ -928,6 +1305,467 @@ def plot_multimodal_comparison_bars(audio_probs, visual_probs, fused_probs):
 
 
 # -----------------------------------------------------------------------------
+# VoiceMind AI Landing Page Controller
+# -----------------------------------------------------------------------------
+def render_landing_page(predictor):
+    """
+    Renders the futuristic VoiceMind AI Landing Page matching the reference design:
+    - Glowing glass navbar (Waveform Logo, Brand Name, Links, CTA Button)
+    - Two-column hero with gradient headline, description, CTAs, and 4 feature indicators
+    - Right-column cinematic AI Face & Landmark visual, Hinglish preview, and Emotion Distribution card
+    - Capabilities section with 4 feature cards and real navigation triggers
+    - Interactive Real-Time Demo Workbench
+    - Technical Features Grid (6 architecture tiles)
+    - About VoiceMind AI & Ethical AI Guidelines
+    - Modern Footer with branding and links
+    """
+    hero_b64 = get_image_base64("assets/hero_visual_art.jpg")
+    if not hero_b64:
+        hero_b64 = get_image_base64("assets/landing_hero_reference.jpg")
+
+    # 1. TOP NAVBAR
+    st.markdown("""
+        <div class="vm-navbar">
+            <div class="vm-logo-group">
+                <div class="vm-wave-icon">
+                    <div class="vm-wave-bar"></div>
+                    <div class="vm-wave-bar"></div>
+                    <div class="vm-wave-bar"></div>
+                    <div class="vm-wave-bar"></div>
+                    <div class="vm-wave-bar"></div>
+                </div>
+                <div>
+                    <div class="vm-brand-name">VoiceMind <span>AI</span></div>
+                    <span class="vm-brand-tagline">Speak • Feel • Understand</span>
+                </div>
+            </div>
+            <div class="vm-nav-links">
+                <a href="#home" class="vm-nav-link active">Home</a>
+                <a href="#about" class="vm-nav-link">About</a>
+                <a href="#features" class="vm-nav-link">Features</a>
+                <a href="#demo" class="vm-nav-link">Demo</a>
+                <a href="#contact" class="vm-nav-link">Contact</a>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # 2. HERO SECTION (2 COLUMNS)
+    col_hero_left, col_hero_right = st.columns([1.15, 1.0], gap="large")
+
+    with col_hero_left:
+        st.markdown("""
+            <div id="home">
+                <div class="vm-hero-badge">
+                    <span>✦</span> AI Powered Emotion & Lip-Sync Analysis
+                </div>
+                <h1 class="vm-hero-title">
+                    Turn Speech & Video<br>
+                    <span class="vm-gradient-text">into Meaning</span>
+                </h1>
+                <p class="vm-hero-desc">
+                    Detect emotions from speech, analyze lip movements, convert video to Hinglish text, and get deep insights with our advanced AI-powered platform.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        col_btn1, col_btn2, _ = st.columns([1.1, 1.1, 0.8])
+        with col_btn1:
+            if st.button("🚀 Try Now →", key="landing_hero_try_now", type="primary", use_container_width=True):
+                st.session_state["app_navigation_view"] = "🎙️ Speech Analysis Workspace"
+                st.rerun()
+        with col_btn2:
+            st.markdown("""
+                <a href="#demo" style="text-decoration: none;">
+                    <div style="background: rgba(9, 26, 51, 0.8); border: 1px solid rgba(0, 212, 255, 0.35); border-radius: 24px; padding: 10px 18px; text-align: center; color: #F8FAFC; font-weight: 600; font-size: 0.92rem; transition: all 0.2s ease;">
+                        🎬 Watch Demo
+                    </div>
+                </a>
+            """, unsafe_allow_html=True)
+
+        # 4 Feature Indicators Pods under buttons
+        st.markdown("""
+            <div class="vm-indicators-grid">
+                <div class="vm-indicator-pod">
+                    <div class="vm-pod-icon" style="color: #00D4FF;">🎙️</div>
+                    <div>
+                        <div class="vm-pod-title">Emotion Detection</div>
+                        <div class="vm-pod-sub">7-class emotion analysis</div>
+                    </div>
+                </div>
+                <div class="vm-indicator-pod">
+                    <div class="vm-pod-icon" style="color: #C084FC;">👄</div>
+                    <div>
+                        <div class="vm-pod-title">Lip-Sync Analysis</div>
+                        <div class="vm-pod-sub">Track & decode lip movements</div>
+                    </div>
+                </div>
+                <div class="vm-indicator-pod">
+                    <div class="vm-pod-icon" style="color: #38BDF8;">🔤</div>
+                    <div>
+                        <div class="vm-pod-title">Hinglish Conversion</div>
+                        <div class="vm-pod-sub">Video to text (Hinglish)</div>
+                    </div>
+                </div>
+                <div class="vm-indicator-pod">
+                    <div class="vm-pod-icon" style="color: #FBBF24;">📊</div>
+                    <div>
+                        <div class="vm-pod-title">Deep Analytics</div>
+                        <div class="vm-pod-sub">Insights & visualizations</div>
+                    </div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col_hero_right:
+        if hero_b64:
+            st.markdown(f"""
+                <div class="vm-visual-wrapper">
+                    <img src="{hero_b64}" class="vm-visual-img" alt="VoiceMind AI Visual Intelligence" />
+                </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div class="vm-visual-wrapper" style="padding: 24px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="background: rgba(0, 212, 255, 0.15); border: 1px solid #00D4FF; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; color: #00D4FF; font-weight: 700;">
+                            ✨ Visual Speech Intelligence
+                        </div>
+                        <div style="font-size: 0.8rem; color: #94A3B8;">468 Landmarks Active</div>
+                    </div>
+                    <div style="text-align: center; padding: 30px 0;">
+                        <div style="font-size: 3.5rem; filter: drop-shadow(0 0 20px #00D4FF);">👄 〰️ 🎙️</div>
+                        <div style="font-size: 1.1rem; color: #FFFFFF; font-weight: 700; margin-top: 12px;">Real-Time Audio-Visual Synchronization</div>
+                        <div style="font-size: 0.82rem; color: #94A3B8;">Cross-modal alignment • MAR Articulatory kinematics</div>
+                    </div>
+                    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px; font-size: 0.8rem; color: #CBD5E1;">
+                        <b>Hinglish Transcript:</b> <i>"Aap kaise ho? Kya kar rahe ho?"</i>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+
+    # 3. CAPABILITIES SECTION
+    st.markdown("""
+        <div id="features" style="padding-top: 20px;">
+            <div class="vm-section-tag">— OUR CAPABILITIES</div>
+            <h2 class="vm-section-title">Everything You Need for Smarter Speech Analysis</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
+    col_c1, col_c2, col_c3, col_c4 = st.columns(4)
+
+    with col_c1:
+        st.markdown("""
+            <div class="vm-capability-card">
+                <div>
+                    <div class="vm-card-icon-wrap" style="color: #00D4FF; background: rgba(0, 212, 255, 0.12); border-color: rgba(0, 212, 255, 0.3);">🎙️</div>
+                    <div class="vm-card-title">Speech Emotion Detection</div>
+                    <div class="vm-card-desc">Identify emotions like happy, sad, angry, fear, neutral, surprise and disgust with deep CNN-LSTM networks.</div>
+                    <ul class="vm-card-bullets">
+                        <li>Audio file upload & live mic</li>
+                        <li>128-Mel Spectrogram & MFCCs</li>
+                        <li>7-Class confidence breakdown</li>
+                    </ul>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Analyze Speech →", key="cap_btn_speech", use_container_width=True):
+            st.session_state["app_navigation_view"] = "🎙️ Speech Analysis Workspace"
+            st.rerun()
+
+    with col_c2:
+        st.markdown("""
+            <div class="vm-capability-card">
+                <div>
+                    <div class="vm-card-icon-wrap" style="color: #C084FC; background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.3);">👄</div>
+                    <div class="vm-card-title">Lip-Sync & Visual Analysis</div>
+                    <div class="vm-card-desc">Detect lip movements and analyze video-to-audio synchronization with cross-correlation telemetry.</div>
+                    <ul class="vm-card-bullets">
+                        <li>Video upload & live webcam</li>
+                        <li>Mouth Aspect Ratio (MAR)</li>
+                        <li>Sync Quality Index (SQI)</li>
+                    </ul>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Analyze Video →", key="cap_btn_video", use_container_width=True):
+            st.session_state["app_navigation_view"] = "👁️ Lip-Sync & Visual Speech Analysis"
+            st.rerun()
+
+    with col_c3:
+        st.markdown("""
+            <div class="vm-capability-card">
+                <div>
+                    <div class="vm-card-icon-wrap" style="color: #38BDF8; background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.3);">🔤</div>
+                    <div class="vm-card-title">Hinglish Video-to-Text</div>
+                    <div class="vm-card-desc">Convert spoken words into natural Hinglish text with timestamps and multi-format subtitle exports.</div>
+                    <ul class="vm-card-bullets">
+                        <li>Visual-only lip reading mode</li>
+                        <li>Audio-assisted multimodal fusion</li>
+                        <li>SRT, VTT, TXT, CSV, PDF export</li>
+                    </ul>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Convert Video →", key="cap_btn_hinglish", use_container_width=True):
+            st.session_state["app_navigation_view"] = "👄 AI Lip Reading & Hinglish Converter"
+            st.rerun()
+
+    with col_c4:
+        st.markdown("""
+            <div class="vm-capability-card">
+                <div>
+                    <div class="vm-card-icon-wrap" style="color: #FBBF24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.3);">🧠</div>
+                    <div class="vm-card-title">Model Insights</div>
+                    <div class="vm-card-desc">View accuracy, confusion matrix, per-class F1-scores, and detailed performance benchmarking metrics.</div>
+                    <ul class="vm-card-bullets">
+                        <li>Interactive Confusion Matrix</li>
+                        <li>Precision, Recall & F1-Scores</li>
+                        <li>CNN vs LSTM vs Hybrid</li>
+                    </ul>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("View Insights →", key="cap_btn_insights", use_container_width=True):
+            st.session_state["app_navigation_view"] = "🧠 Model Insights & Evaluation"
+            st.rerun()
+
+    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+
+    # 4. INTERACTIVE LIVE DEMO SECTION
+    st.markdown("""
+        <div id="demo" style="padding-top: 20px;">
+            <div class="vm-section-tag">— LIVE WORKSPACE DEMONSTRATION</div>
+            <h2 class="vm-section-title">Experience VoiceMind AI in Real-Time</h2>
+            <p style="font-size: 0.95rem; color: #94A3B8; margin-bottom: 20px;">
+                Test speech emotion recognition, visual lip-sync analysis, and video-to-Hinglish conversion directly below with real neural inference.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    demo_tab1, demo_tab2, demo_tab3, demo_tab4 = st.tabs([
+        "🎙️ Speech Emotion Detection",
+        "⏱️ AI Lip-Sync Analysis",
+        "👄 AI Lip-Reading & Hinglish",
+        "🧠 Model Architecture & Evaluation"
+    ])
+
+    with demo_tab1:
+        col_d1, col_d2 = st.columns([1.1, 1.3])
+        with col_d1:
+            st.markdown("""
+                <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">Upload or Record Speech Audio</div>
+                    <div style="font-size: 0.82rem; color: #94A3B8; margin-bottom: 14px;">Supported: WAV, MP3, FLAC, OGG (Max 25MB)</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            demo_audio = st.file_uploader("Choose Audio File", type=['wav', 'mp3', 'flac', 'ogg'], key="demo_audio_uploader")
+            
+            use_demo_sample = st.button("🎵 Load Sample Speech Recording", key="demo_sample_audio_btn")
+            sample_audio_path = None
+            if use_demo_sample:
+                # Find any available wav in raw or create one
+                for root, _, files in os.walk(os.path.join(os.path.dirname(__file__), 'data')):
+                    for f in files:
+                        if f.endswith('.wav'):
+                            sample_audio_path = os.path.join(root, f)
+                            break
+                    if sample_audio_path:
+                        break
+
+        with col_d2:
+            target_audio = demo_audio or sample_audio_path
+            if target_audio:
+                with st.spinner("Analyzing vocal prosody and computing CNN-LSTM neural probabilities..."):
+                    if isinstance(target_audio, str):
+                        y, sr = librosa.load(target_audio, sr=22050)
+                        fname = os.path.basename(target_audio)
+                    else:
+                        target_audio.seek(0)
+                        y, sr = librosa.load(target_audio, sr=22050)
+                        fname = target_audio.name
+                        target_audio.seek(0)
+
+                    # Predict
+                    temp_p = os.path.join(tempfile.gettempdir(), f"demo_{int(time.time())}.wav")
+                    sf.write(temp_p, y, sr)
+                    try:
+                        if predictor:
+                            pred_emo, probs = predictor.predict(temp_p, return_probabilities=True)
+                        else:
+                            pred_emo, probs = 'neutral', {e: 1.0/7.0 for e in config.EMOTIONS.values()}
+                    finally:
+                        if os.path.exists(temp_p):
+                            os.remove(temp_p)
+
+                    top_conf = probs.get(pred_emo, 0.5) * 100
+                    emo_info = EMOTION_META.get(pred_emo.lower(), {'emoji': '🎙️', 'color': '#38BDF8'})
+
+                    st.markdown(f"""
+                        <div class="hero-emotion-card" style="border-top: 4px solid {emo_info['color']}; padding: 18px; margin-bottom: 16px;">
+                            <div class="hero-badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8;">
+                                ✨ Primary Affect Detected
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="font-size: 2.8rem;">{emo_info['emoji']}</div>
+                                <div>
+                                    <h3 style="margin: 0; font-size: 1.6rem; color: #FFFFFF !important;">{pred_emo.upper()}</h3>
+                                    <div style="font-size: 0.9rem; color: #CBD5E1;">Model Confidence: <b>{top_conf:.1f}%</b></div>
+                                </div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    # Mini Probabilities Bar
+                    for e_name, e_prob in sorted(probs.items(), key=lambda x: x[1], reverse=True)[:4]:
+                        e_m = EMOTION_META.get(e_name.lower(), {'emoji': '🔹', 'color': '#38BDF8'})
+                        st.markdown(f"""
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem;">
+                                <span>{e_m['emoji']} <b>{e_name.capitalize()}</b></span>
+                                <span style="font-family: monospace; color: #00D4FF;">{e_prob*100:.1f}%</span>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.06); border-radius: 4px; height: 6px; margin-bottom: 8px; overflow: hidden;">
+                                <div style="background: {e_m['color']}; width: {e_prob*100}%; height: 100%; border-radius: 4px;"></div>
+                            </div>
+                        """, unsafe_allow_html=True)
+            else:
+                st.info("💡 Upload an audio file or click 'Load Sample Speech Recording' to run real-time inference.")
+
+    with demo_tab2:
+        st.markdown("""
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                <div style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF;">AI Lip-Sync Cross-Correlation Engine</div>
+                <p style="font-size: 0.85rem; color: #94A3B8; max-width: 600px; margin: 8px auto 16px auto;">
+                    Evaluates temporal alignment between vocal acoustics and visual mouth articulation with Pearson correlation across lag search windows.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Launch Full Lip-Sync Workspace →", key="demo_goto_sync_btn", type="primary"):
+            st.session_state["app_navigation_view"] = "👁️ Lip-Sync & Visual Speech Analysis"
+            st.rerun()
+
+    with demo_tab3:
+        st.markdown("""
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                <div style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF;">Hinglish Video-to-Text & Subtitle Generator</div>
+                <p style="font-size: 0.85rem; color: #94A3B8; max-width: 600px; margin: 8px auto 16px auto;">
+                    Translates spoken words and visual articulatory lip kinematics into conversational Romanized Hinglish with schwa-deletion heuristics.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Launch Hinglish Converter Workspace →", key="demo_goto_hinglish_btn", type="primary"):
+            st.session_state["app_navigation_view"] = "👄 AI Lip Reading & Hinglish Converter"
+            st.rerun()
+
+    with demo_tab4:
+        st.markdown("""
+            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+                <div style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">Neural Architecture & Benchmarking</div>
+                <p style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 16px;">
+                    Empirical performance metrics across 2D CNN, Bidirectional LSTM, and Hybrid CNN-LSTM backbones.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Launch Model Insights & Confusion Matrix →", key="demo_goto_insights_btn", type="primary"):
+            st.session_state["app_navigation_view"] = "🧠 Model Insights & Evaluation"
+            st.rerun()
+
+    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+
+    # 5. TECHNICAL FEATURES GRID
+    st.markdown("""
+        <div id="features" style="padding-top: 20px;">
+            <div class="vm-section-tag">— SYSTEM ARCHITECTURE</div>
+            <h2 class="vm-section-title">Production-Grade AI Engineering Pipeline</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px;">
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">🔬</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">128-Mel Filterbank & MFCC</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Extracts perceptual frequency energy distributions and 40 cepstral coefficients at 22.05 kHz.</div>
+            </div>
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">🧠</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">CNN-LSTM Neural Network</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Spatiotemporal 2D convolutions coupled with Bidirectional LSTM sequential memory context.</div>
+            </div>
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">👁️</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">Face & Lip Landmarking</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Extracts Mouth Aspect Ratio (MAR) and articulatory kinematic velocity vectors frame-by-frame.</div>
+            </div>
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">⏱️</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">Pearson Cross-Correlation</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Calculates optimal temporal lag offsets (ms) and broadcast Sync Quality Index (SQI 0-100%).</div>
+            </div>
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">🇮🇳</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">Hinglish Schwa Deletion</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Linguistic phonology rules transliterating Devanagari Hindi into natural English-alphabet Hinglish.</div>
+            </div>
+            <div class="vm-tech-tile">
+                <div style="font-size: 1.4rem; margin-bottom: 8px;">📄</div>
+                <div style="font-size: 1.0rem; font-weight: 700; color: #FFFFFF;">Multi-Format Subtitle & PDF</div>
+                <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">Exports audit reports in PDF, SRT, VTT, TXT, and CSV formats with clause-level timecodes.</div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # 6. ABOUT SECTION
+    st.markdown("""
+        <div id="about" style="background: rgba(9, 26, 51, 0.7); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 18px; padding: 28px 32px; margin-bottom: 40px;">
+            <div class="vm-section-tag">— ABOUT VOICEMIND AI</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: #FFFFFF; margin: 0 0 14px 0;">Empowering Conversational & Affective Speech Intelligence</h2>
+            <p style="font-size: 0.95rem; color: #CBD5E1; line-height: 1.7; margin-bottom: 16px;">
+                VoiceMind AI explores how artificial intelligence can analyze speech, estimate vocal emotion, examine lip movements, and transform supported video speech into readable text. By combining audio digital signal processing, computer vision, and deep learning, the platform provides an interactive environment for speech analysis, synchronization telemetry, and model evaluation.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 0.85rem; color: #94A3B8;">
+                <div style="background: #061326; padding: 14px; border-radius: 8px; border-left: 3px solid #00D4FF;">
+                    <b style="color: #F8FAFC;">🛡️ Ethical & Responsible AI:</b> Designed exclusively for human-computer interaction, academic research, and affective analytics. Not a polygraph or lie-detector instrument.
+                </div>
+                <div style="background: #061326; padding: 14px; border-radius: 8px; border-left: 3px solid #8B5CF6;">
+                    <b style="color: #F8FAFC;">🔒 In-Memory Privacy:</b> All audio and video streams are processed ephemerally in memory or local temporary caches with strict data minimization.
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # 7. CONTACT & FOOTER
+    st.markdown("""
+        <div id="contact" style="border-top: 1px solid rgba(0, 212, 255, 0.2); padding: 36px 0 16px 0; margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 24px;">
+                <div class="vm-logo-group">
+                    <div class="vm-wave-icon">
+                        <div class="vm-wave-bar"></div>
+                        <div class="vm-wave-bar"></div>
+                        <div class="vm-wave-bar"></div>
+                        <div class="vm-wave-bar"></div>
+                        <div class="vm-wave-bar"></div>
+                    </div>
+                    <div>
+                        <div class="vm-brand-name">VoiceMind <span>AI</span></div>
+                        <span class="vm-brand-tagline">Speak • Feel • Understand</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; font-size: 0.85rem;">
+                    <a href="https://github.com/Harshshukla49/Speech-recognition" target="_blank" style="color: #00D4FF; text-decoration: none; font-weight: 600;">
+                        🔗 GitHub Repository
+                    </a>
+                    <span style="color: #64748B;">•</span>
+                    <a href="#home" style="color: #CBD5E1; text-decoration: none;">Back to Top ↑</a>
+                </div>
+            </div>
+            <div style="text-align: center; font-size: 0.78rem; color: #64748B;">
+                © 2026 VoiceMind AI Platform • Deep Learning Speech Emotion Recognition & Visual Speech Intelligence • All Rights Reserved.
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+# -----------------------------------------------------------------------------
 # Main Application Controller
 # -----------------------------------------------------------------------------
 def main():
@@ -939,8 +1777,8 @@ def main():
             <div class="sidebar-brand">
                 <div class="sidebar-brand-icon">🎙️</div>
                 <div>
-                    <div class="sidebar-brand-title">Emotion AI Studio</div>
-                    <div class="sidebar-brand-desc">Acoustic Intelligence v2.0</div>
+                    <div class="sidebar-brand-title">VoiceMind AI</div>
+                    <div class="sidebar-brand-desc">Speak • Feel • Understand</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -948,10 +1786,11 @@ def main():
         selected_view = st.radio(
             "Navigation Menu",
             [
-                "📊 Dashboard Overview",
+                "✨ VoiceMind AI Home",
                 "🎙️ Speech Analysis Workspace",
                 "👁️ Lip-Sync & Visual Speech Analysis",
                 "👄 AI Lip Reading & Hinglish Converter",
+                "📊 Dashboard Overview",
                 "📜 Prediction History & Database",
                 "🧠 Model Insights & Evaluation",
                 "🧪 Model Benchmarks & Comparison",
@@ -1014,9 +1853,15 @@ def main():
     predictor = load_predictor()
 
     # -------------------------------------------------------------------------
+    # VIEW 0: ✨ VOICEMIND AI LANDING PAGE
+    # -------------------------------------------------------------------------
+    if selected_view == "✨ VoiceMind AI Home":
+        render_landing_page(predictor)
+
+    # -------------------------------------------------------------------------
     # VIEW 1: 📊 DASHBOARD OVERVIEW
     # -------------------------------------------------------------------------
-    if selected_view == "📊 Dashboard Overview":
+    elif selected_view == "📊 Dashboard Overview":
         st.markdown("""
             <div class="dashboard-header">
                 <div class="header-badge">Executive Analytics • System Telemetry</div>

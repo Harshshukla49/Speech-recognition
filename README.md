@@ -35,33 +35,41 @@ flowchart LR
 
 ## 🚀 Key Platform Features
 
-### 1. 🎙️ Advanced Speech Analysis Workspace
+### 1. ✨ VoiceMind AI Cinematic Landing Page
+* **Modern AI Studio Aesthetics**: Deep navy (`#030B1B`) and near-black theme with electric cyan (`#00D4FF`), royal blue (`#2677FF`), and violet purple (`#8B5CF6`) ambient glows.
+* **Glass Navigation Bar**: Animated waveform soundbars logo, brand identity (*"Speak • Feel • Understand"*), navigation links, and active state indicators.
+* **Interactive Hero Showcase**: Two-column layout with gradient typography, primary *"Try Now"* action button, *"Watch Demo"* trigger, and 4 feature indicator pods (*Emotion Detection, Lip-Sync Analysis, Hinglish Conversion, Deep Analytics*).
+* **Cinematic Facial Landmark Art**: High-fidelity visual presentation highlighting 468 facial mesh landmarks, mouth tracking bounds, spectrogram overlay, floating Hinglish preview card (*"Aap kaise ho?"*), and 7-class emotion distribution metrics.
+* **Interactive Capabilities Grid**: 4 feature cards (*Speech Emotion Detection, Lip-Sync & Visual Analysis, Hinglish Video-to-Text, Model Insights*) directly routed to their respective application workspaces.
+* **Live In-Page Interactive Demo**: Full-featured in-place testing console supporting real-time audio analysis, video synchronization, and multilingual transcription without leaving the landing page.
+
+### 2. 🎙️ Advanced Speech Analysis Workspace
 * **Dual Ingestion**: File Upload (WAV, MP3, FLAC, OGG) and Browser Microphone Recording (`st.audio_input`) with hardware fallback (`PyAudio`).
 * **Signal Validation**: Real-time silence detection, amplitude normalization ($L_2$), clipping checks, and sample rate harmonization ($22.05\text{ kHz}$).
 * **Segment-Wise Timeline**: Overlapping windowed classification for long audio files, displaying temporal emotion trajectories over time.
 
-### 2. 🔬 Multi-Dimensional Acoustic Signal Descriptors
+### 3. 🔬 Multi-Dimensional Acoustic Signal Descriptors
 * **Time-Domain Waveform**: Amplitude envelope variations over duration.
 * **128-Band Mel-Spectrogram**: Perceptually-scaled frequency energy density in decibels ($\text{dB}$).
 * **40-Coefficient MFCC Heatmap**: Acoustic cepstral coefficients highlighting formant structures.
 * **Acoustic Metrics**: Pitch estimation ($F_0$ via YIN), RMS Energy, Zero Crossing Rate (ZCR), Spectral Centroid, Spectral Rolloff, and Silence %.
 
-### 3. 📜 SQLite Database & Prediction History
+### 4. 📜 SQLite Database & Prediction History
 * Full persistence of past analyses (ID, Timestamp, Audio Name, Emotion, Confidence, Probabilities, Acoustic Descriptors, Model Version, Latency).
 * Search, filter by emotion category, single-record deletion, and batch CSV export.
 
-### 4. 📄 Executive PDF Report Generation
+### 5. 📄 Executive PDF Report Generation
 * Downloadable audit summary generated on-the-fly via ReportLab.
 * Contains analysis IDs, primary emotion badge, 7-class probability breakdown table, acoustic descriptors table, embedded high-resolution waveforms and spectrogram plots, and scientific disclaimers.
 
-### 5. 👁️ AI Lip-Sync Detection & Visual Speech Analysis
+### 6. 👁️ AI Lip-Sync Detection & Visual Speech Analysis
 * **Video Ingestion & Demuxing**: High-fidelity video upload (MP4, MOV, AVI, WEBM, MKV) and camera capture with PyAV/OpenCV frame and audio stream extraction.
 * **Mouth Aspect Ratio (MAR) & Velocity Tracking**: Multi-tier tracking estimating mouth opening ratio $\text{MAR}(t)$, oral cavity contour geometry, and lip kinematic velocity $v_{\text{lip}}(t)$.
 * **Audio-Visual Synchronization (Lip-Sync)**: Temporal cross-correlation $R_{EL}(\tau)$ comparing acoustic RMS energy envelopes with visual articulation dynamics, estimating temporal offset $\Delta t$ (ms), Sync Quality Index (SQI 0-100%), and broadcast standard alignment.
 * **Visual Speech Recognition (VSR / Lip-Reading) Adapter**: Extensible adapter for 3D-CNN + Conformer silent lip-reading architectures (e.g. AV-Hubert, LipNet), with zero-hallucination diagnostics.
 * **Multimodal Emotion Fusion**: Adaptive decision-level late fusion combining acoustic predictions with visual facial dynamics.
 
-### 6. 👄 AI Lip-Reading & Hinglish Video-to-Text Conversion
+### 7. 👄 AI Lip-Reading & Hinglish Video-to-Text Conversion
 * **Visual Speech Recognition (VSR / Lip-Reading)**: Decodes spoken words directly from silent video frames using facial landmarking, standardized $88 \times 88$ mouth ROI tensors, and an 8-class articulatory viseme taxonomy ($V_0 \dots V_7$).
 * **Dual Operation Modes**:
   * 🔕 **Lip Reading Only (Visual Only)**: Decodes speech exclusively from visual mouth kinematics without accessing the audio track.
@@ -71,12 +79,12 @@ flowchart LR
 * **Interactive Transcript Editor**: In-browser editing interface with live timestamp adjustment and instant synchronization across subtitle formats.
 * **Multi-Format Subtitle & Document Exports**: Downloadable `.srt`, `.vtt`, `.txt`, `.csv`, and formatted `.pdf` documents with clause-level timecodes and confidence metrics.
 
-### 7. 🧠 Model Insights & Empirical Evaluation
+### 8. 🧠 Model Insights & Empirical Evaluation
 * Multi-class Interactive Confusion Matrix (counts & normalized percentages).
 * Per-Class Precision, Recall, and F1-Score grouped bar visualization.
 * Model Architecture Comparison Suite (2D CNN vs Bi-LSTM vs CNN-LSTM Hybrid).
 
-### 8. 🛡️ Responsible AI & Privacy
+### 9. 🛡️ Responsible AI & Privacy
 * Configurable low-confidence uncertainty warnings (default $< 40\%$).
 * In-memory/ephemeral audio/video retention policy.
 * Explicit non-polygraph and non-clinical psychiatric disclaimer.
