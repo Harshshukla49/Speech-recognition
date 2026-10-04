@@ -85,7 +85,8 @@ def save_analysis(
     media_type="audio",
     sync_offset_ms=0.0,
     sync_quality_score=0.0,
-    visual_metrics=None
+    visual_metrics=None,
+    **kwargs
 ):
     """Save an analysis record (audio or video/lip-sync) to the database"""
     init_db()
