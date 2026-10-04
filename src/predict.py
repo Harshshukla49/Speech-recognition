@@ -30,7 +30,7 @@ class EmotionPredictor:
         
         print(f"Loading model from: {model_path}")
         self.model = load_model(model_path)
-        print("✅ Model loaded successfully!")
+        print("[+] Model loaded successfully!")
     
     def predict(self, audio_path, return_probabilities=False):
         """
@@ -48,7 +48,7 @@ class EmotionPredictor:
         features = extract_features_from_file(audio_path)
         
         if features is None:
-            print("❌ Error extracting features")
+            print("[-] Error extracting features")
             return None
         
         # Expand dimensions for batch
@@ -131,7 +131,7 @@ class EmotionPredictor:
         
         if save_path:
             plt.savefig(save_path)
-            print(f"✅ Visualization saved to: {save_path}")
+            print(f"[+] Visualization saved to: {save_path}")
         else:
             plt.show()
         
@@ -168,7 +168,7 @@ def predict_from_audio(audio_path, model_path=None, visualize=False):
     # Sort and display probabilities
     sorted_probs = sorted(probabilities.items(), key=lambda x: x[1], reverse=True)
     for emotion_name, prob in sorted_probs:
-        bar = '█' * int(prob * 40)
+        bar = '#' * int(prob * 40)
         print(f"{emotion_name:12s}: {bar:40s} {prob*100:5.2f}%")
     
     print("="*50 + "\n")
@@ -200,7 +200,7 @@ def main():
     
     # Check if file exists
     if not os.path.exists(args.audio_path):
-        print(f"❌ Audio file not found: {args.audio_path}")
+        print(f"[-] Audio file not found: {args.audio_path}")
         return
     
     # Create predictor
@@ -221,7 +221,7 @@ def main():
     # Sort and display probabilities
     sorted_probs = sorted(probabilities.items(), key=lambda x: x[1], reverse=True)
     for emotion_name, prob in sorted_probs:
-        bar = '█' * int(prob * 40)
+        bar = '#' * int(prob * 40)
         print(f"{emotion_name:12s}: {bar:40s} {prob*100:5.2f}%")
     
     print("="*50 + "\n")

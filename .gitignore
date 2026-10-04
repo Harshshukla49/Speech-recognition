@@ -62,6 +62,10 @@ logs/
 temp_*
 *.tmp
 *.wav.tmp
+*.db
+data/*.db
+gh/
+gh.zip
 
 # Model artifacts
 *.pkl

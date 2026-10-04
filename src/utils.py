@@ -20,7 +20,7 @@ def create_directories():
     
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
-    print("✅ All directories created successfully!")
+    print("[+] All directories created successfully!")
 
 
 def plot_waveform(audio, sr, title="Waveform"):
@@ -122,8 +122,8 @@ def save_features(features, labels, features_path=None, labels_path=None):
     
     np.save(features_path, features)
     np.save(labels_path, labels)
-    print(f"✅ Features saved to: {features_path}")
-    print(f"✅ Labels saved to: {labels_path}")
+    print(f"[+] Features saved to: {features_path}")
+    print(f"[+] Labels saved to: {labels_path}")
 
 
 def load_features(features_path=None, labels_path=None):
@@ -135,8 +135,8 @@ def load_features(features_path=None, labels_path=None):
     
     features = np.load(features_path)
     labels = np.load(labels_path)
-    print(f"✅ Features loaded from: {features_path}")
-    print(f"✅ Labels loaded from: {labels_path}")
+    print(f"[+] Features loaded from: {features_path}")
+    print(f"[+] Labels loaded from: {labels_path}")
     print(f"Features shape: {features.shape}, Labels shape: {labels.shape}")
     
     return features, labels
