@@ -61,12 +61,22 @@ flowchart LR
 * **Visual Speech Recognition (VSR / Lip-Reading) Adapter**: Extensible adapter for 3D-CNN + Conformer silent lip-reading architectures (e.g. AV-Hubert, LipNet), with zero-hallucination diagnostics.
 * **Multimodal Emotion Fusion**: Adaptive decision-level late fusion combining acoustic predictions with visual facial dynamics.
 
-### 6. 🧠 Model Insights & Empirical Evaluation
+### 6. 👄 AI Lip-Reading & Hinglish Video-to-Text Conversion
+* **Visual Speech Recognition (VSR / Lip-Reading)**: Decodes spoken words directly from silent video frames using facial landmarking, standardized $88 \times 88$ mouth ROI tensors, and an 8-class articulatory viseme taxonomy ($V_0 \dots V_7$).
+* **Dual Operation Modes**:
+  * 🔕 **Lip Reading Only (Visual Only)**: Decodes speech exclusively from visual mouth kinematics without accessing the audio track.
+  * 🎧 **Audio + Lip Reading (Multimodal Fused)**: Reconciles automatic speech recognition (`SpeechRecognition` / `hi-IN` & `en-IN`) with visual viseme kinematics to resolve acoustic ambiguity in noisy environments.
+* **Hinglish NLP Conversion Engine**: Transliterates Devanagari Hindi and code-switched phrases into natural, conversational Romanized Hinglish (e.g., *"आप कैसे हो? क्या कर रहे हो?"* $\to$ *"Aap kaise ho? Kya kar rahe ho?"*), with linguistic schwa-deletion heuristics and technical term preservation.
+* **3-Way Multilingual Output**: Instant generation of **Hinglish** (default), **Devanagari Hindi**, and **English Translation**.
+* **Interactive Transcript Editor**: In-browser editing interface with live timestamp adjustment and instant synchronization across subtitle formats.
+* **Multi-Format Subtitle & Document Exports**: Downloadable `.srt`, `.vtt`, `.txt`, `.csv`, and formatted `.pdf` documents with clause-level timecodes and confidence metrics.
+
+### 7. 🧠 Model Insights & Empirical Evaluation
 * Multi-class Interactive Confusion Matrix (counts & normalized percentages).
 * Per-Class Precision, Recall, and F1-Score grouped bar visualization.
 * Model Architecture Comparison Suite (2D CNN vs Bi-LSTM vs CNN-LSTM Hybrid).
 
-### 7. 🛡️ Responsible AI & Privacy
+### 8. 🛡️ Responsible AI & Privacy
 * Configurable low-confidence uncertainty warnings (default $< 40\%$).
 * In-memory/ephemeral audio/video retention policy.
 * Explicit non-polygraph and non-clinical psychiatric disclaimer.
@@ -106,12 +116,16 @@ speech-emotion-recognition/
 │   ├── utils.py                  # Visualizations, palettes, and I/O helpers
 │   ├── video_processor.py        # Video ingestion, metadata inspection & audio demuxing
 │   ├── lip_sync_detector.py      # Face landmarking, MAR & A/V cross-correlation
-│   ├── visual_speech_recognizer.py # Silent visual speech recognition adapter
+│   ├── visual_speech_recognizer.py # Silent visual speech recognition & viseme classifier
+│   ├── hinglish_engine.py        # Devanagari-to-Hinglish NLP engine & translations
+│   ├── audio_transcriber.py      # Speech ASR & multimodal audio-visual reconciler
+│   ├── subtitle_exporter.py      # Multi-format SRT, VTT, TXT, CSV, PDF exporters
 │   └── multimodal_fusion.py      # Audio-visual late fusion decision engine
 │
 ├── tests/
 │   ├── test_platform.py          # Speech emotion platform test suite (6/6 passing)
-│   └── test_lip_sync.py          # Lip-sync & multimodal test suite (5/5 passing)
+│   ├── test_lip_sync.py          # Lip-sync & multimodal test suite (5/5 passing)
+│   └── test_lip_reading.py       # Lip-reading & Hinglish NLP test suite (5/5 passing)
 │
 ├── app.py                        # Multi-view Streamlit AI Dashboard
 ├── requirements.txt              # Production Python dependencies

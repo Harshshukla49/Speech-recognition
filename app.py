@@ -52,6 +52,9 @@ from src.video_processor import VideoProcessor
 from src.lip_sync_detector import LipSyncDetector
 from src.visual_speech_recognizer import VisualSpeechRecognizerAdapter
 from src.multimodal_fusion import MultimodalFusionEngine
+from src.hinglish_engine import HinglishEngine
+from src.audio_transcriber import AudioTranscriber
+from src.subtitle_exporter import SubtitleExporter
 
 # -----------------------------------------------------------------------------
 # Configuration Constants & Emotion Metadata
@@ -948,6 +951,7 @@ def main():
                 "📊 Dashboard Overview",
                 "🎙️ Speech Analysis Workspace",
                 "👁️ Lip-Sync & Visual Speech Analysis",
+                "👄 AI Lip Reading & Hinglish Converter",
                 "📜 Prediction History & Database",
                 "🧠 Model Insights & Evaluation",
                 "🧪 Model Benchmarks & Comparison",
@@ -1779,7 +1783,400 @@ def main():
             """, unsafe_allow_html=True)
 
     # -------------------------------------------------------------------------
-    # VIEW 4: 📜 PREDICTION HISTORY & DATABASE
+    # VIEW: 👄 AI LIP READING & HINGLISH CONVERTER
+    # -------------------------------------------------------------------------
+    elif selected_view == "👄 AI Lip Reading & Hinglish Converter":
+        st.markdown("""
+            <div class="dashboard-header">
+                <div class="header-badge">Visual NLP • Hinglish Video-to-Text • Multimodal ASR</div>
+                <h1 class="header-title">👄 AI Lip Reading & Hinglish Converter</h1>
+                <p class="header-subtitle">Analyze speaker lip movements, decode spoken words from visual kinematics and audio speech recognition, and generate natural conversational Hinglish in the Roman alphabet.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        lip_tab1, lip_tab2 = st.tabs(["📁 Upload Video File", "📹 Webcam / Live Clip"])
+        selected_video_file = None
+        input_video_filename = "recorded_speech.mp4"
+        input_source_type = "Webcam"
+
+        with lip_tab1:
+            uploaded_vid = st.file_uploader(
+                "Upload Video File (MP4, MOV, AVI, WEBM, MKV)",
+                type=["mp4", "mov", "avi", "webm", "mkv", "m4v"],
+                key="lip_reading_video_upload",
+                help="Upload a video with a visible speaker talking in Hindi, English, or mixed Hinglish."
+            )
+            if uploaded_vid is not None:
+                selected_video_file = uploaded_vid
+                input_video_filename = uploaded_vid.name
+                input_source_type = "Video Upload"
+
+        with lip_tab2:
+            st.info("📹 Capture or upload a short speaking video clip using your device camera.")
+            cam_vid = st.file_uploader(
+                "Upload Camera Video Clip",
+                type=["mp4", "webm", "mov"],
+                key="lip_reading_camera_upload"
+            )
+            if cam_vid is not None:
+                selected_video_file = cam_vid
+                input_video_filename = f"camera_speech_{int(time.time())}.mp4"
+                input_source_type = "Webcam Recording"
+
+        if selected_video_file is not None:
+            video_proc = VideoProcessor(target_sample_rate=22050, max_fps=25)
+            temp_vid_path = video_proc.save_temp_video(selected_video_file)
+
+            try:
+                vid_meta = video_proc.get_metadata(temp_vid_path)
+
+                col_vplay, col_vctl = st.columns([1.2, 1.0])
+
+                with col_vplay:
+                    st.video(temp_vid_path)
+
+                with col_vctl:
+                    st.markdown("""
+                        <div class="content-card">
+                            <div class="content-card-title">⚙️ Lip-Reading Configuration & Speaker Selection</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    # Quick inspection of faces in initial frame for speaker selection
+                    cap_peek = cv2.VideoCapture(temp_vid_path)
+                    ret_peek, frame_peek = cap_peek.read()
+                    cap_peek.release()
+
+                    num_speakers = 1
+                    if ret_peek:
+                        rgb_peek = cv2.cvtColor(frame_peek, cv2.COLOR_BGR2RGB)
+                        adapter_peek = VisualSpeechRecognizerAdapter()
+                        spks = adapter_peek.detect_visible_speakers(rgb_peek)
+                        num_speakers = max(1, len(spks))
+
+                    selected_speaker = 1
+                    if num_speakers > 1:
+                        selected_speaker = st.selectbox(
+                            "Select Target Speaker",
+                            options=list(range(1, num_speakers + 1)),
+                            format_func=lambda x: f"👤 Speaker #{x} (Detected in Video)"
+                        )
+                    else:
+                        st.caption("👤 **Target Speaker:** Primary Detected Speaker (#1)")
+
+                    # Mode Selection
+                    analysis_mode = st.radio(
+                        "Recognition Mode",
+                        [
+                            "🎙️👁️ Audio + Lip Reading (Multimodal Assisted)",
+                            "👁️ Lip Reading Only (Visual Silent Mode)"
+                        ],
+                        help="Lip Reading Only operates strictly on visual mouth kinematics. Audio + Lip Reading fuses acoustic ASR with visual corroboration."
+                    )
+
+                    # Multilingual Output Toggles
+                    col_tog1, col_tog2 = st.columns(2)
+                    with col_tog1:
+                        show_devanagari = st.checkbox("Show Devanagari Hindi", value=True)
+                    with col_tog2:
+                        show_english = st.checkbox("Show English Translation", value=True)
+
+                    include_emotion = st.checkbox("Run Simultaneous Speech Emotion Classification", value=True)
+
+                # Process Trigger Button
+                run_lip_read_btn = st.button("🚀 Transcribe Speech to Hinglish", type="primary", use_container_width=True)
+
+                if run_lip_read_btn:
+                    progress_placeholder = st.empty()
+                    progress_bar = st.progress(0)
+
+                    # Stage 1: Validation
+                    progress_placeholder.markdown("⏳ **Stage 1/6:** Validating video container and stream integrity...")
+                    progress_bar.progress(15)
+                    time.sleep(0.1)
+
+                    # Stage 2: Audio & Frame Extraction
+                    progress_placeholder.markdown("⏳ **Stage 2/6:** Extracting video frames, timestamps, and audio stream...")
+                    progress_bar.progress(35)
+                    audio_arr, sr_rate = video_proc.extract_audio(temp_vid_path)
+                    frames_data, f_summary = video_proc.extract_frames(temp_vid_path, target_fps=25.0, resize_dims=(480, 360))
+
+                    # Stage 3: Lip & Face Tracking
+                    progress_placeholder.markdown("⏳ **Stage 3/6:** Tracking speaker mouth aspect ratio (MAR) and kinematics...")
+                    progress_bar.progress(55)
+                    detector = LipSyncDetector(fps=f_summary.get('sampling_fps', 25.0))
+                    lip_points = detector.track_lip_movement(frames_data)
+
+                    # Stage 4: Visual Speech Recognition
+                    progress_placeholder.markdown("⏳ **Stage 4/6:** Decoding visual viseme sequences and word candidates...")
+                    progress_bar.progress(70)
+                    vsr_engine = VisualSpeechRecognizerAdapter()
+                    visual_results = vsr_engine.decode_visual_speech(
+                        frames_data, lip_points, selected_speaker_idx=selected_speaker
+                    )
+
+                    # Stage 5: Audio ASR & Multimodal Alignment
+                    progress_placeholder.markdown("⏳ **Stage 5/6:** Running speech recognition and cross-modal alignment...")
+                    progress_bar.progress(85)
+                    transcriber = AudioTranscriber()
+                    
+                    audio_results = None
+                    mode_clean = "Lip Reading Only" if "Lip Reading Only" in analysis_mode else "Audio + Lip Reading"
+                    
+                    if mode_clean == "Audio + Lip Reading" and len(audio_arr) > 0:
+                        audio_results = transcriber.transcribe_audio_file(audio_arr, sr_rate, preferred_language="hi-IN")
+
+                    aligned_segments = transcriber.align_and_reconcile_multimodal(
+                        visual_results=visual_results,
+                        audio_results=audio_results,
+                        total_duration=vid_meta['duration_sec'],
+                        mode=mode_clean
+                    )
+
+                    # Optional Emotion Prediction
+                    detected_emotion_val = None
+                    if include_emotion and predictor and len(audio_arr) > 0 and np.max(np.abs(audio_arr)) > 0.001:
+                        tmp_wav_emo = os.path.join(tempfile.gettempdir(), f"emo_lip_{int(time.time())}.wav")
+                        sf.write(tmp_wav_emo, audio_arr, sr_rate)
+                        try:
+                            emo_pred, emo_probs = predictor.predict(tmp_wav_emo, return_probabilities=True)
+                            detected_emotion_val = emo_pred
+                        finally:
+                            if os.path.exists(tmp_wav_emo):
+                                os.remove(tmp_wav_emo)
+
+                    # Stage 6: Final Hinglish Formatting
+                    progress_placeholder.markdown("✅ **Stage 6/6:** Finalizing Hinglish transcript and multilingual exports!")
+                    progress_bar.progress(100)
+                    time.sleep(0.2)
+                    progress_placeholder.empty()
+                    progress_bar.empty()
+
+                    # Save full text in session state for live editing
+                    full_hinglish_str = ' '.join([s.hinglish_text for s in aligned_segments if s.hinglish_text])
+                    if not full_hinglish_str:
+                        full_hinglish_str = "No clear spoken words decoded."
+
+                    st.session_state["current_hinglish_transcript"] = full_hinglish_str
+                    st.session_state["current_aligned_segments"] = [asdict(s) for s in aligned_segments]
+                    st.session_state["current_video_name"] = input_video_filename
+                    st.session_state["current_video_duration"] = vid_meta['duration_sec']
+                    st.session_state["current_analysis_mode"] = mode_clean
+                    st.session_state["current_detected_emotion"] = detected_emotion_val
+
+                    st.success(f"🎉 Speech Transcribed Successfully! ({len(aligned_segments)} clauses generated in {mode_clean})")
+
+                # -------------------------------------------------------------
+                # Display Results if available in Session State
+                # -------------------------------------------------------------
+                if "current_aligned_segments" in st.session_state and st.session_state.get("current_aligned_segments"):
+                    segments_list = st.session_state["current_aligned_segments"]
+                    full_hinglish = st.session_state.get("current_hinglish_transcript", "")
+                    curr_mode = st.session_state.get("current_analysis_mode", "Audio + Lip Reading")
+                    emo_res = st.session_state.get("current_detected_emotion", None)
+
+                    st.markdown("---")
+                    st.markdown("### 📝 Decoded Speech Transcripts")
+
+                    # Primary Hinglish Card
+                    st.markdown(f"""
+                        <div class="content-card" style="border-left: 6px solid #38BDF8; padding: 22px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    ✨ Primary Output: Conversational Hinglish (Roman Script)
+                                </div>
+                                <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56,189,248,0.3); font-size: 0.72rem; padding: 3px 8px; border-radius: 10px; font-weight: 600;">
+                                    Mode: {curr_mode}
+                                </span>
+                            </div>
+                            <div style="font-size: 1.35rem; font-weight: 600; color: #F1F5F9; line-height: 1.6; margin: 10px 0;">
+                                "{full_hinglish}"
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    # Optional Devanagari & English Translation Cards
+                    devanagari_full = ' '.join([s.get('devanagari_text', '') for s in segments_list if s.get('devanagari_text')])
+                    english_full = ' '.join([s.get('english_translation', '') for s in segments_list if s.get('english_translation')])
+
+                    if devanagari_full or english_full:
+                        col_tr1, col_tr2 = st.columns(2)
+                        with col_tr1:
+                            if devanagari_full:
+                                st.markdown(f"""
+                                    <div class="content-card" style="padding: 16px;">
+                                        <div style="font-size: 0.75rem; font-weight: 700; color: #FBBF24; text-transform: uppercase;">
+                                            🇮🇳 Native Devanagari Hindi
+                                        </div>
+                                        <div style="font-size: 1.05rem; color: #CBD5E1; margin-top: 6px; line-height: 1.5;">
+                                            {devanagari_full}
+                                        </div>
+                                    </div>
+                                """, unsafe_allow_html=True)
+                        with col_tr2:
+                            if english_full:
+                                st.markdown(f"""
+                                    <div class="content-card" style="padding: 16px;">
+                                        <div style="font-size: 0.75rem; font-weight: 700; color: #34D399; text-transform: uppercase;">
+                                            🇬🇧 English Translation
+                                        </div>
+                                        <div style="font-size: 1.05rem; color: #CBD5E1; margin-top: 6px; line-height: 1.5;">
+                                            {english_full}
+                                        </div>
+                                    </div>
+                                """, unsafe_allow_html=True)
+
+                    # Simultaneous Emotion Card (if detected)
+                    if emo_res:
+                        emo_m = EMOTION_META.get(emo_res.lower(), {'emoji': '🎙️', 'color': '#38BDF8'})
+                        st.markdown(f"""
+                            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Simultaneous Vocal Affect</div>
+                                    <div style="font-size: 1.15rem; font-weight: 800; color: {emo_m['color']}; margin-top: 2px;">
+                                        {emo_m['emoji']} {emo_res.upper()} (Deep Emotion Classifier)
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); max-width: 320px; text-align: right;">
+                                    Acoustic prosody evaluated independently from linguistic speech content.
+                                </div>
+                            </div>
+                        """, unsafe_allow_html=True)
+
+                    # Interactive Transcript Editor
+                    with st.expander("✏️ Edit & Refine Transcript", expanded=False):
+                        edited_text = st.text_area(
+                            "Edit Hinglish Transcript",
+                            value=full_hinglish,
+                            height=100,
+                            help="Make manual corrections to the generated Hinglish transcript if needed."
+                        )
+                        if st.button("💾 Apply Transcript Edits", key="apply_edit_btn"):
+                            st.session_state["current_hinglish_transcript"] = edited_text
+                            st.success("✅ Transcript updated.")
+                            st.rerun()
+
+                    # Detailed Clause-by-Clause Breakdown Table
+                    st.markdown("### ⏱️ Timestamped Clause Breakdown")
+                    for idx, s in enumerate(segments_list):
+                        mod_badge_color = "#34D399" if "Fused" in s.get('source_modality', '') else ("#38BDF8" if "Audio" in s.get('source_modality', '') else "#FBBF24")
+                        st.markdown(f"""
+                            <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="background: #0F172A; border: 1px solid var(--border-subtle); padding: 4px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #38BDF8;">
+                                        {s.get('start_time', 0.0):.1f}s - {s.get('end_time', 0.0):.1f}s
+                                    </div>
+                                    <div style="font-size: 1.0rem; font-weight: 600; color: #F1F5F9;">
+                                        {s.get('hinglish_text', '')}
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">
+                                        <i>{s.get('english_translation', '')}</i>
+                                    </span>
+                                    <span style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: {mod_badge_color}; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600;">
+                                        {s.get('source_modality', 'Transcript')}
+                                    </span>
+                                </div>
+                            </div>
+                        """, unsafe_allow_html=True)
+
+                    # Multi-Format Subtitle & Document Exports
+                    st.markdown("---")
+                    st.markdown("### 📥 Download Subtitles & Documentation")
+                    col_d1, col_d2, col_d3, col_d4, col_d5 = st.columns(5)
+
+                    # SRT
+                    srt_data = SubtitleExporter.export_to_srt(segments_list)
+                    with col_d1:
+                        st.download_button(
+                            "📥 SubRip (.srt)",
+                            data=srt_data,
+                            file_name=f"Subtitles_{int(time.time())}.srt",
+                            mime="text/plain",
+                            use_container_width=True
+                        )
+
+                    # VTT
+                    vtt_data = SubtitleExporter.export_to_vtt(segments_list)
+                    with col_d2:
+                        st.download_button(
+                            "📥 WebVTT (.vtt)",
+                            data=vtt_data,
+                            file_name=f"Subtitles_{int(time.time())}.vtt",
+                            mime="text/vtt",
+                            use_container_width=True
+                        )
+
+                    # TXT
+                    txt_data = SubtitleExporter.export_to_txt(segments_list)
+                    with col_d3:
+                        st.download_button(
+                            "📥 Plain Text (.txt)",
+                            data=txt_data,
+                            file_name=f"Transcript_{int(time.time())}.txt",
+                            mime="text/plain",
+                            use_container_width=True
+                        )
+
+                    # CSV
+                    csv_data = SubtitleExporter.export_to_csv(segments_list)
+                    with col_d4:
+                        st.download_button(
+                            "📥 Structured (.csv)",
+                            data=csv_data,
+                            file_name=f"Transcript_Data_{int(time.time())}.csv",
+                            mime="text/csv",
+                            use_container_width=True
+                        )
+
+                    # PDF
+                    pdf_buf = SubtitleExporter.export_to_pdf(
+                        segments=segments_list,
+                        video_name=st.session_state.get("current_video_name", "video.mp4"),
+                        total_duration=st.session_state.get("current_video_duration", 0.0),
+                        analysis_mode=curr_mode,
+                        detected_emotion=emo_res
+                    )
+                    with col_d5:
+                        st.download_button(
+                            "📥 Executive (.pdf)",
+                            data=pdf_buf.getvalue(),
+                            file_name=f"Transcript_Report_{int(time.time())}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
+
+                    # Disclaimer
+                    st.markdown("""
+                        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted);">
+                            🛡️ <b>Scientific Disclaimer & Source Attribution:</b> Visual speech recognition classifies visible lip visemes without audio. 
+                            In <i>Audio + Lip Reading</i> mode, acoustic speech recognition and visual kinematics are aligned based on video timestamps. 
+                            Hinglish text output is formatted using natural phonetic Romanization.
+                        </div>
+                    """, unsafe_allow_html=True)
+
+            finally:
+                if os.path.exists(temp_vid_path):
+                    try:
+                        os.remove(temp_vid_path)
+                    except Exception:
+                        pass
+        else:
+            st.markdown("""
+                <div class="content-card" style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 2.6rem; margin-bottom: 12px;">👄💬</div>
+                    <h3 style="color: #F1F5F9 !important; margin-bottom: 6px;">Ready for Video Speech Transcription</h3>
+                    <p style="font-size: 0.88rem; color: #94A3B8; max-width: 580px; margin: 0 auto;">
+                        Upload a video file containing a speaker talking in Hindi, English, or mixed Hinglish.
+                        The AI will track the speaker's lip kinematics, decode words using visual speech recognition,
+                        and output a natural Hinglish transcript with subtitle exports (SRT, VTT, CSV, PDF).
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+    # -------------------------------------------------------------------------
+    # VIEW: 📜 PREDICTION HISTORY & DATABASE
     # -------------------------------------------------------------------------
     elif selected_view == "📜 Prediction History & Database":
         st.markdown("""
